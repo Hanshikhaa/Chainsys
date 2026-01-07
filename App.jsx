@@ -1,252 +1,264 @@
-// Passing a Simple Message
+ import { Routes, Route } from "react-router-dom";
 
-import Parent from "./Parent";
+import { Navigate } from "react-router-dom";
 
-function App() {
-  return <Parent message="Welcome to React" />;
-}import Child from "./Child";
-
-function Parent({ message }) {
-  return <Child message={message} />;
-}
-import GrandChild from "./GrandChild";
-
-function Child({ message }) {
-  return <GrandChild message={message} />;
-}
-function GrandChild({ message }) {
-  return <h2>{message}</h2>;
-}
-
-export default App;
-
-//User Details
-
-import Parent from "./Parent";
+import { useNavigate } from "react-router-dom";
 
 function App() {
-  const user = {
-    name: "Hanshi",
-    role: "Developer"
-  };
-
-  return <Parent user={user} />;
-}
-import Child from "./Child";
-
-function Parent({ user }) {
-  return <Child user={user} />;
-}
-import GrandChild from "./GrandChild";
-
-function Child({ user }) {
-  return <GrandChild user={user} />;
-}
-
-function GrandChild({ user }) {
   return (
-    <div>
-      <p>Name: {user.name}</p>
-      <p>Role: {user.role}</p>
-    </div>
+    <Routes>
+      <Route path="/" element={<h2>Home Page</h2>} />
+      <Route path="/about" element={<h2>About Page</h2>} />
+    </Routes>
   );
 }
 
 export default App;
 
-//Button Click
+// Navigation With Link
 
-import Parent from "./Parent";
+import { Routes, Route, Link } from "react-router-dom";
 
 function App() {
-  return <Parent />;
-}
-
-import { useState } from "react";
-import Child from "./Child";
-
-function Parent() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
-      <h2>Count: {count}</h2>
-      <Child count={count} setCount={setCount} />
+      <Link to="/">Home</Link> |{" "}
+      <Link to="/about">About</Link>
+
+      <Routes>
+        <Route path="/" element={<h2>Home Page</h2>} />
+        <Route path="/about" element={<h2>About Page</h2>} />
+      </Routes>
     </>
   );
 }
 
-import GrandChild from "./GrandChild";
+export default App;
 
-function Child({ count, setCount }) {
-  return <GrandChild count={count} setCount={setCount} />;
+//button navigation
+
+import {Routes,Route,Link,useNavigate}from "react-router-dom";
+
+function Home(){
+  const navigate=useNavigate();
+  return(
+    <>
+    <h2>Home Page</h2>
+    <button onClick={()=>navigate("/about")}>
+      Go to About Page
+      </button>
+    </>   
+  );
 }
 
-function GrandChild({ count, setCount }) {
+function App(){
+  return(
+    <>
+    <Link to="/">Home</Link>|{""}
+    <Link to="/about">About</Link>
+    <Routes>
+      <Route path="/" element={<Home/>}/>
+      <Route path="/about" element={<h2>About Page</h2>}/>
+    </Routes>
+    </>
+  );
+}
+export default App;
+
+
+//Go back
+
+function About(){
+  const navigate=useNavigate();
+  return(
+    <>
+    <h2>About Page</h2>
+    <button onClick={()=>navigate(-1)}>
+      Go Back
+      </button>
+    </>   
+  );
+}export default About;
+
+//Login and Home page
+
+import {Routes,Route,useNavigate}from "react-router-dom";
+function Login(){
+  const navigate=useNavigate();
   return (
-    <button onClick={() => setCount(count + 1)}>
-      Increase
+    <>
+    <h2>Login Page</h2>
+    <button onClick={()=>navigate("/home")}>
+      Login
     </button>
+    </>
+  );
+  
+}
+function Home(){
+  return<h2>Home Page</h2>
+}
+function App(){
+  return(
+    <Routes>
+      <Route path="/"element={<Login/>}/>
+      <Route path="/home"element={<Home/>}/>
+    </Routes>
+  );
+} export default App;
+
+//Login Home and About page
+import { Routes, Route, useNavigate } from "react-router-dom";
+
+function Login() {
+  const navigate = useNavigate();
+
+  return (
+    <>
+      <h2>Login Page</h2>
+      <button onClick={() => navigate("/home")}>
+        Login
+      </button>
+    </>
   );
 }
 
-export default App;
+function Home() {
+  const navigate=useNavigate();
+  return (
+    <>
+      <h2>Home Page</h2>
+      <button onClick={()=>navigate("/about")}>
+        Home to About
+      </button>
+    </>
+  )
+}
+function About() {
+  const navigate=useNavigate();
+  return (
+    <>
+      <h2>About Page</h2>
+      <button onClick={()=>navigate(-2)}>
+        Back to Login
+      </button>
+    </>
+  )
+}
 
-//Theme
-
-import Parent from "./Parent";
 
 function App() {
-  return <Parent />;
-}
-
-import { useState } from "react";
-import Child from "./Child";
-
-function Parent() {
-  const [dark, setDark] = useState(false);
-
-  return <Child dark={dark} setDark={setDark} />;
-}
-
-import GrandChild from "./GrandChild";
-
-function Child({ dark, setDark }) {
-  return <GrandChild dark={dark} setDark={setDark} />;
-}
-
-function GrandChild({ dark, setDark }) {
   return (
-    <div style={{
-      background: dark ? "black" : "white",
-      color: dark ? "white" : "black",
-      height: "100vh"
-    }}>
-      <button onClick={() => setDark(!dark)}>
-        Click
-      </button>
-    </div>
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/about" element={<About />} />
+    </Routes>
   );
 }
 
 export default App;
 
-// CONTEXT API//
-import { createContext, useContext, useState } from "react";
+//Go Back and Forward
+import {useNavigate}from "react-router-dom";
+ function About(){
+  const navigate=useNavigate();
+  return(
+    <>
+    <h2>About page</h2>
+    <button onClick={()=>navigate(-1)}>Back</button>
+    <button onClick={()=>navigate(1)}>Forward</button>
+    </>
+  );
+ }
+export default About;
 
+//Simple Menu
 
-const UserContext = createContext();
+import{Routes,Route,Link}from "react-router-dom";
+function Home(){
+  return(
+    <>
+    <Link to="/">Home</Link>|{" "}
+    <Link to="/about">About</Link>|{" "}
+    <Link to="/contact">Contact</Link>
+    <Routes>
+      <Route path="/" element={<h2>Home Page</h2>} />
+      <Route path="/about" element={<h2>About Page</h2>} />
+      <Route path="/contact" element={<h2>Contact Page</h2>} />
+    </Routes>
+    </>
+
+  );
+}
+export default Home;
+
+// User Profile Page 
+
+import{Routes,Route,Link,useParams}from "react-router-dom";
+function Profile(){
+  const {username}=useParams();
+  return <h2>Welcome,{username}!</h2>;
+}
+function App(){
+  return(
+    <>
+    <Link to="/profile/John">John's Profile</Link>|{" "}
+    <Link to="/profile/Jane">Jane's Profile</Link>
+    <Routes>
+      <Route path="/profile/:username" element={<Profile/>}/>
+    </Routes>
+    </>
+  );
+}
+export default App;
+
+//URL Parameter
+
+import { Routes, Route, useParams } from "react-router-dom";
+
+function User() {
+  const { name } = useParams();
+  return <h2>Hello {name}</h2>;
+}
 
 function App() {
-  const [user, setUser] = useState("Hanshi");
-
   return (
-    <UserContext.Provider value={{ user, setUser }}>
-      <Parent />
-    </UserContext.Provider>
-  );
-}
-
-
-function Parent() {
-  return <Child />;
-}
-
-
-function Child() {
-  return <GrandChild />;
-}
-
-
-function GrandChild() {
-  const { user, setUser } = useContext(UserContext);
-
-  return (
-    <div>
-      <h2>Hello {user}</h2>
-      <button onClick={() => setUser("React Learner")}>
-        Change Name
-      </button>
-    </div>
+    <Routes>
+      <Route path="/user/:name" element={<User />} />
+    </Routes>
   );
 }
 
 export default App;
 
-// theme //
 
-import { createContext,useContext,useState } from "react";
+//404 Page Not Found
 
-const ThemeContext=createContext();
+import { Routes, Route } from "react-router-dom";
 
 function App(){
-  const [dark,setDark]=useState(false);
-
-  return (
-    <ThemeContext.Provider value={{dark,setDark }}>
-      <Parent />
-    </ThemeContext.Provider>
+  return(
+    <Routes>
+      <Route path="/"element={<h2>Home</h2>}/>
+      <Route path="*"element={<h2>Error Found</h2>}/>
+    </Routes>
   );
 }
-
-function Parent() {
-  return <Child />;
-}
-
-function Child() {
-  return <GrandChild />;
-}
-
-function GrandChild() {
-  const { dark, setDark } = useContext(ThemeContext);
-
-  return (
-    <div style={{
-      background: dark ? "black" : "white",
-      color: dark ? "white" : "black",
-      height: "100vh"
-    }}>
-      <button onClick={() => setDark(!dark)}>
-        Toggle Theme
-      </button>
-    </div>
-  );
-}
-
 export default App;
 
-//Login /Logout
-import { createContext,useContext,useState} from "react";
-const AuthContext=createContext();
+//Conditional Navigation
 
-function App(){
-  const [isLogin,setIsLogin]=useState(false);
-  return(
-    <AuthContext.Provider value={{isLogin,setIsLogin}}>
-      <Parent />
-    </AuthContext.Provider>
-  );
+import { useNavigate } from "react-router-dom";
+function Login() {
+  const navigate = useNavigate();
+  const isLoggedIn = true;
+
+  if (isLoggedIn) {
+    navigate("/dashboard");
+  }
+
+  return <h2>Login Page</h2>;
 }
-
-function Parent(){
-  return <Child />;
-}
-
-function Child(){
-  return <GrandChild />;
-}
-
-function GrandChild(){
-  const {isLogin,setIsLogin}=useContext(AuthContext);
-
-  return(
-    <div>
-      <h2>{isLogin ? "Welcome User" : "Please Login"}</h2>
-      <button onClick={()=>setIsLogin(true)}>Login</button>
-      <button onClick={()=>setIsLogin(false)}>Logout</button>
-    </div>
-  );
-}
-
-export default App;
+export default Login();
 
