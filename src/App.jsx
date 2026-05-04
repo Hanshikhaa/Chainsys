@@ -1,100 +1,107 @@
-// // // import { useState, useEffect } from "react";
-// // // function App() {
-// // //   const [count, setCount] = useState(0);
-// // //   const [show, setShow] = useState(true);
-// // //   useEffect(() => {
-// // //     console.log("Mounted Component");
-// // //     return (() => {
-// // //       console.log("Unmounted Component");
-// // //     });
-// // //   }), [];
-// // //   useEffect(() => {
-// // //     console.log("Count Updated:", count);
-// // //   }, [count]);
-// // //   return (
-// // //     <div style={{ padding: "20px" }}>
-// // //       <h2>React Lifestyle Sample</h2>
-// // //       <button onClick={() => setCount(count + 1)}>
-// // //         Count Increment
-// // //       </button>
-// // //       <p>Count:{count}</p>
-// // //       <button
-// // //         onClick={() => setShow(!show)}>
-// // //         Component Toggle
-// // //       </button>
-// // //       {show && <p>Component is Visible</p>}
-// // //     </div>
-// // //   );
+import React from 'react';
+import { AppProvider } from './context/AppContext';
+import { useAppContext } from './context/useAppContext';
+import { useLocation, BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import Home from './pages/shop/Home';
+import Products from './pages/shop/Products';
+import ProductDetail from './pages/shop/ProductDetail';
+import Cart from './pages/shop/Cart';
+import Checkout from './pages/shop/Checkout';
+import Payment from './pages/shop/Payment';
+import Orders from './pages/shop/Orders';
+import Returns from './pages/shop/Returns';
+import Inventory from './pages/shared/Inventory';
+import Vendors from './pages/shared/Vendors';
+import About from './pages/shop/About';
+import Login from './pages/shop/Login';
+import AdminLogin from './pages/admin/AdminLogin';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminOverview from './pages/admin/AdminOverview';
+import AdminUpload from './pages/admin/AdminUpload';
+import AdminInquiries from './pages/admin/AdminInquiries';
+import AdminFeedback from './pages/admin/AdminFeedback';
+import AdminLayout from './components/layout/AdminLayout';
+import Wishlist from './pages/shop/Wishlist';
+import Profile from './pages/shop/Profile';
+import Contact from './pages/shop/Contact';
+import ChatWidget from './components/features/chat/ChatWidget';
+import GlobalNotification from './components/layout/GlobalNotification';
+import ScrollToTop from './components/layout/ScrollToTop';
+import JobRollingBanner from './components/features/jobs/JobRollingBanner';
+import CareerResponseNotifier from './components/features/jobs/CareerResponseNotifier';
 
-// // // }
-// // // export default App;
+const UserLayout = () => {
+  const { user } = useAppContext();
+  const location = useLocation();
 
-// // import { useEffect, useState } from "react";
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
-// // export default function App() {
-// //   const [time, setTime] = useState(0);
-
-// //   useEffect(() => {
-// //     const timer = setInterval(() => {
-// //       setTime(t => t + 1);
-// //     }, 1000);
-
-// //     return () => clearInterval(timer);
-// //   }, []);
-
-// //   return <h2>Seconds: {time}</h2>;
-// // }
-
-// import { useEffect, useState } from "react";
-
-// export default function App() {
-//   const [width, setWidth] = useState(window.innerWidth);
-
-//   useEffect(() => {
-//     const handleResize = () => {
-//       setWidth(window.innerWidth);
-//     };
-
-//     window.addEventListener("resize", handleResize);
-
-//     return () => {
-//       window.removeEventListener("resize", handleResize);
-//     };
-//   }, []);
-
-//   return <h2>Window Width: {width}</h2>;
-// }
-
-import { useEffect, useState } from "react";
-
- function App() {
-  const [count, setCount] = useState(0);
-  const [title, setTitle] = useState("");
-
-  useEffect(() => {
-    console.log("Component Mounted");
-  }, []);
-
-  useEffect(() => {
-    console.log("Count Updated");
-  }, [count]);
-
-  useEffect(() => {
-    document.title = title;
-  }, [title]);
+  if (user.role === 'admin' && location.pathname !== '/admin') {
+    return <Navigate to="/admin" replace />;
+  }
 
   return (
-    <div>
-      <button onClick={() => setCount(count + 1)}>
-        Increment
-      </button>
-
-      <input
-        placeholder="Change Title"
-        onChange={(e) => setTitle(e.target.value)}
-      />
+    <div className="app">
+      <JobRollingBanner />
+      <CareerResponseNotifier />
+      <Header />
+      <main>
+        <Outlet />
+      </main>
+      <Footer />
+      <ChatWidget />
     </div>
   );
-}
-export default App;
+};
 
+function App() {
+  return (
+    <AppProvider>
+      <Router>
+        <ScrollToTop />
+        <GlobalNotification />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          {/* Public Storefront Routes with standard Header/Footer */}
+          <Route path="/" element={<UserLayout />}>
+            <Route index element={<Home />} />
+            <Route path="products" element={<Products />} />
+            <Route path="products/:id" element={<ProductDetail />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="checkout" element={<Checkout />} />
+            <Route path="payment" element={<Payment />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="returns" element={<Returns />} />
+            <Route path="inventory" element={<Inventory />} />
+            <Route path="vendors" element={<Vendors />} />
+            <Route path="about" element={<About />} />
+            <Route path="categories" element={<Home />} />
+            <Route path="wishlist" element={<Wishlist />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="contact" element={<Contact />} />
+          </Route>
+
+          {/* Standalone Admin Login (No Header/Footer) */}
+          <Route path="/admin-login" element={<AdminLogin />} />
+
+          {/* Secure Admin Dashboard Routes (Unique UI, No Header/Footer) */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminOverview />} />
+            <Route path="catalog" element={<AdminDashboard />} />
+            <Route path="upload" element={<AdminUpload />} />
+            <Route path="inquiries" element={<AdminInquiries />} />
+            <Route path="feedback" element={<AdminFeedback />} />
+            <Route path="inventory" element={<Inventory />} />
+            <Route path="vendors" element={<Vendors />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AppProvider>
+  );
+}
+
+export default App;
